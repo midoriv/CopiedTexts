@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct CopiedTextsApp: App {
+    let viewModel = CopiedTextsViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: viewModel)
         }
     }
 }
