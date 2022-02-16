@@ -30,11 +30,17 @@ class CopiedTextsViewModel: ObservableObject {
                     switch pattern {
                     case \.probableWebURL:
                         print("url")
-                        self.texts.append("\(detectedValues[keyPath: pattern])")
+                        
+                        DispatchQueue.main.async {
+                            self.texts.append("\(detectedValues[keyPath: pattern])")
+                        }
                         return
                     case \.probableWebSearch:
                         print("search")
-                        self.texts.append("\(detectedValues[keyPath: pattern])")
+                        
+                        DispatchQueue.main.async {
+                            self.texts.append("\(detectedValues[keyPath: pattern])")
+                        }
                         return
                     default: return
                     }
