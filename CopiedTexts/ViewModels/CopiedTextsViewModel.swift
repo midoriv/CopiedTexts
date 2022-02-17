@@ -11,6 +11,16 @@ import SwiftUI
 class CopiedTextsViewModel: ObservableObject {
     @Published private(set) var texts = [String]()
     
+    // get currently copied text (the last text in the array)
+    var currentText: String {
+        if let last = texts.last {
+            return last
+        }
+        else {
+            return ""
+        }
+    }
+    
     
     // MARK: - Intents
     
@@ -28,18 +38,11 @@ class CopiedTextsViewModel: ObservableObject {
                 
                 for pattern in detectedPatterns {
                     switch pattern {
-                    case \.probableWebURL:
-                        print("url")
-                        
-                        DispatchQueue.main.async {
-                            self.texts.append("\(detectedValues[keyPath: pattern])")
-                        }
-                        return
-                    case \.probableWebSearch:
-                        print("search")
-                        
-                        DispatchQueue.main.async {
-                            self.texts.append("\(detectedValues[keyPath: pattern])")
+                    case \.probableWebURL, \.probableWebSearch:
+                        if (detectedValues[keyPath: pattern] as? String) != self.currentText {
+                            DispatchQueue.main.async {
+                                self.texts.append("\(detectedValues[keyPath: pattern])")
+                            }
                         }
                         return
                     default: return
