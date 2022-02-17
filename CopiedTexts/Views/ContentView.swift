@@ -8,14 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.scenePhase) var scenePhase
+    
     @ObservedObject var viewModel: CopiedTextsViewModel
     
-    @State var pasteboardContents: String = ""
-    
-    init(viewModel: CopiedTextsViewModel) {
-        self.viewModel = viewModel
-//        viewModel.inspectPasteboard()
-    }
     
     var body: some View {
         Group {
@@ -30,8 +26,19 @@ struct ContentView: View {
                 }
             }
         }
-        .onAppear {
-            viewModel.inspectPasteboard()
+        .onChange(of: scenePhase) { newPhase in
+            switch newPhase {
+                case .inactive:
+                    print("inactive")
+                case .active:
+                    print("active")
+                case .background:
+                    print("background")
+            }
+            
+            if newPhase == .active {
+                viewModel.inspectPasteboard()
+            }
         }
     }
     
