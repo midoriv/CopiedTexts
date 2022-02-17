@@ -11,6 +11,10 @@ import SwiftUI
 class CopiedTextsViewModel: ObservableObject {
     @Published private(set) var texts = [String]()
     
+    var sortedTexts: [String] {
+        texts.reversed()
+    }
+    
     // get currently copied text (the last text in the array)
     var currentText: String {
         if let last = texts.last {
@@ -45,13 +49,20 @@ class CopiedTextsViewModel: ObservableObject {
                             }
                         }
                         return
-                    default: return
+                    default:
+                        print("default")
+                        return
                     }
                 }
                 
-            case .failure:
+            case .failure (let failure):
+                print(failure)
             break
             }
         }
+    }
+    
+    func clearPasteboard() {
+        UIPasteboard.general.string = ""
     }
 }

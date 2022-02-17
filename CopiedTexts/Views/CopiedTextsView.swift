@@ -11,19 +11,21 @@ struct CopiedTextsView: View {
     @Environment(\.scenePhase) var scenePhase
     @ObservedObject var viewModel: CopiedTextsViewModel
     
+    @ViewBuilder
+    var emptyView: some View {
+        if viewModel.texts.isEmpty {
+            Text("No copied text yet")
+        }
+    }
+    
     var body: some View {
-        Group {
-            if viewModel.texts.isEmpty {
-                Text("No copied text yet")
-            }
-            else {
-                List {
-                    ForEach(viewModel.texts, id: \.self) { text in
-                        Text(text)
-                    }
-                }
+        
+        List {
+            ForEach(viewModel.sortedTexts, id: \.self) { text in
+                Text(text)
             }
         }
+        .overlay(emptyView)
         .onChange(of: scenePhase) { newPhase in
             switch newPhase {
                 case .inactive:
@@ -35,14 +37,11 @@ struct CopiedTextsView: View {
             }
             
             if newPhase == .active {
+//                viewModel.clearPasteboard()
                 viewModel.inspectPasteboard()
             }
         }
     }
-    
-    
-    
-
 }
 
 //struct ContentView_Previews: PreviewProvider {
