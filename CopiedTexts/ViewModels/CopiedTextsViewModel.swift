@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class CopiedTextsViewModel: ObservableObject {
-    @Published private(set) var texts = [String]()
+    @Published var texts = [String]()
     
     var sortedTexts: [String] {
         texts.reversed()

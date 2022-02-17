@@ -24,6 +24,9 @@ struct CopiedTextsView: View {
             ForEach(viewModel.sortedTexts, id: \.self) { text in
                 Text(text)
             }
+            .onDelete { indexSet in
+                viewModel.texts.remove(atOffsets: indexSet)
+            }
         }
         .overlay(emptyView)
         .onChange(of: scenePhase) { newPhase in
@@ -41,6 +44,7 @@ struct CopiedTextsView: View {
                 viewModel.inspectPasteboard()
             }
         }
+        
     }
 }
 
