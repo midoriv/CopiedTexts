@@ -19,7 +19,6 @@ struct CopiedTextsView: View {
     }
     
     var body: some View {
-        
         List {
             ForEach(viewModel.sortedTexts, id: \.self) { text in
                 Text(text)
@@ -31,12 +30,14 @@ struct CopiedTextsView: View {
         .overlay(emptyView)
         .onChange(of: scenePhase) { newPhase in
             switch newPhase {
-                case .inactive:
-                    print("inactive")
-                case .active:
-                    print("active")
-                case .background:
-                    print("background")
+            case .inactive:
+                print("inactive")
+            case .active:
+                print("active")
+            case .background:
+                print("background")
+            @unknown default:
+                break
             }
             
             if newPhase == .active {
