@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  CopiedTextsView.swift
 //  CopiedTexts
 //
 //  Created by Midori Verdouw on 14/2/2022.
@@ -7,11 +7,9 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct CopiedTextsView: View {
     @Environment(\.scenePhase) var scenePhase
-    
     @ObservedObject var viewModel: CopiedTextsViewModel
-    
     
     var body: some View {
         Group {

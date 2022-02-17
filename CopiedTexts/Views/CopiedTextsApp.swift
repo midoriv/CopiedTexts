@@ -13,7 +13,7 @@ struct CopiedTextsApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: viewModel)
+            CopiedTextsView(viewModel: viewModel)
         }
     }
 }
