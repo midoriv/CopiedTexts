@@ -65,4 +65,8 @@ class CopiedTextsViewModel: ObservableObject {
     func clearPasteboard() {
         UIPasteboard.general.string = ""
     }
+    
+    func deleteText(indexSet: IndexSet) {
+        texts.remove(atOffsets: indexSet)
+    }
 }

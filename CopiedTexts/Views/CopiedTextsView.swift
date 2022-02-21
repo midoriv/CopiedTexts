@@ -18,14 +18,31 @@ struct CopiedTextsView: View {
         }
     }
     
+    @ViewBuilder
+    var titleView: some View {
+        Color(.systemGray6)
+        .overlay(
+            HStack {
+                Text("Copied Texts")
+                    .font(.system(size: 30, weight: .bold, design: .default))
+                    .padding([.top, .horizontal], 30)
+                Spacer()
+            }
+        )
+        .frame(height: 60)
+    }
+    
     var body: some View {
-        List {
-            ForEach(viewModel.sortedTexts, id: \.self) { text in
-                Text(text)
+        VStack(spacing: 0) {
+            titleView
+                
+            List {
+                ForEach(viewModel.sortedTexts, id: \.self) { text in
+                    Text(text)
+                }
+                .onDelete(perform: viewModel.deleteText)
             }
-            .onDelete { indexSet in
-                viewModel.texts.remove(atOffsets: indexSet)
-            }
+            
         }
         .overlay(emptyView)
         .onChange(of: scenePhase) { newPhase in
@@ -45,7 +62,6 @@ struct CopiedTextsView: View {
                 viewModel.inspectPasteboard()
             }
         }
-        
     }
 }
 
