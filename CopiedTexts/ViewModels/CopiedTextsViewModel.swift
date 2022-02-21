@@ -68,5 +68,9 @@ class CopiedTextsViewModel: ObservableObject {
     
     func deleteText(indexSet: IndexSet) {
         texts.remove(atOffsets: indexSet)
+        // if deleted the last text
+        if texts.isEmpty {
+            clearPasteboard()
+        }
     }
 }
