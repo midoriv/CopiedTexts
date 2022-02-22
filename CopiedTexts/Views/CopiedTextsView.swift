@@ -14,7 +14,7 @@ struct CopiedTextsView: View {
     @ViewBuilder
     var emptyView: some View {
         if viewModel.texts.isEmpty {
-            Text("No copied text yet")
+            Text("No copied text yet").font(.title3)
         }
     }
     
