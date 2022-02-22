@@ -15,16 +15,6 @@ class CopiedTextsViewModel: ObservableObject {
         texts.reversed()
     }
     
-    // get currently copied text (the last text in the array)
-    var currentText: String {
-        if let last = texts.last {
-            return last
-        }
-        else {
-            return ""
-        }
-    }
-    
     
     // MARK: - Intents
     
@@ -43,7 +33,8 @@ class CopiedTextsViewModel: ObservableObject {
                 for pattern in detectedPatterns {
                     switch pattern {
                     case \.probableWebURL, \.probableWebSearch:
-                        if (detectedValues[keyPath: pattern] as? String) != self.currentText {
+                        // if the currently copied text does not exist in the texts array
+                        if !self.texts.contains(detectedValues[keyPath: pattern] as! String) {
                             DispatchQueue.main.async {
                                 self.texts.append("\(detectedValues[keyPath: pattern])")
                             }
