@@ -19,36 +19,11 @@ class CopiedTextsViewModel: ObservableObject {
     // MARK: - Intents
     
     func inspectPasteboard() {
-        guard UIPasteboard.general.hasStrings else { return }
-        
-        let somePatterns: Set<PartialKeyPath<UIPasteboard.DetectedValues>> = [
-             \.probableWebURL,
-             \.probableWebSearch
-        ]
-        UIPasteboard.general.detectValues(for: somePatterns) { result in
-            switch result {
-            case .success(let detectedValues):
-                let detectedPatterns = detectedValues[keyPath: \.patterns]
-                
-                for pattern in detectedPatterns {
-                    switch pattern {
-                    case \.probableWebURL, \.probableWebSearch:
-                        // if the currently copied text does not exist in the texts array
-                        if !self.texts.contains(detectedValues[keyPath: pattern] as! String) {
-                            DispatchQueue.main.async {
-                                self.texts.append("\(detectedValues[keyPath: pattern])")
-                            }
-                        }
-                        return
-                    default:
-                        print("default")
-                        return
-                    }
+        if let text = UIPasteboard.general.string {
+            if !self.texts.contains(text) {
+                DispatchQueue.main.async {
+                    self.texts.append(text)
                 }
-                
-            case .failure (let failure):
-                print(failure)
-            break
             }
         }
     }
