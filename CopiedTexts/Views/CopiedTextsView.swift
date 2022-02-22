@@ -9,7 +9,8 @@ import SwiftUI
 
 struct CopiedTextsView: View {
     @Environment(\.scenePhase) var scenePhase
-    @ObservedObject var viewModel: CopiedTextsViewModel
+    @EnvironmentObject var viewModel: CopiedTextsViewModel
+//    @ObservedObject var viewModel: CopiedTextsViewModel
     
     @ViewBuilder
     var emptyView: some View {
@@ -38,7 +39,7 @@ struct CopiedTextsView: View {
                 
             List {
                 ForEach(viewModel.sortedTexts, id: \.self) { text in
-                    Text(text)
+                    RowView(text: text)
                 }
                 .onDelete(perform: viewModel.deleteText)
             }
@@ -62,6 +63,35 @@ struct CopiedTextsView: View {
                 viewModel.inspectPasteboard()
             }
         }
+    }
+}
+
+struct RowView: View {
+    @EnvironmentObject var viewModel: CopiedTextsViewModel
+    var text: String
+    
+    var body: some View {
+        HStack {
+            Text(text)
+            
+            Spacer()
+            
+            Button {
+                viewModel.setPasteboard(text: text)
+            } label: {
+                copyButton
+            }
+        }
+    }
+    
+    var copyButton: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundColor(.mint)
+            Text("Copy")
+                .foregroundColor(.white)
+        }
+        .frame(width: 60, height: 30)
     }
 }
 

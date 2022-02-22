@@ -62,6 +62,10 @@ class CopiedTextsViewModel: ObservableObject {
         }
     }
     
+    func setPasteboard(text: String) {
+        UIPasteboard.general.string = text
+    }
+    
     func clearPasteboard() {
         UIPasteboard.general.string = ""
     }
