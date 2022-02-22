@@ -10,7 +10,6 @@ import SwiftUI
 struct CopiedTextsView: View {
     @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var viewModel: CopiedTextsViewModel
-//    @ObservedObject var viewModel: CopiedTextsViewModel
     
     @ViewBuilder
     var emptyView: some View {
@@ -26,24 +25,22 @@ struct CopiedTextsView: View {
             HStack {
                 Text("Copied Texts")
                     .font(.system(size: 30, weight: .bold, design: .default))
-                    .padding([.top, .horizontal], 30)
+                    .padding(.horizontal, 30)
                 Spacer()
             }
         )
-        .frame(height: 60)
+        .frame(height: 70)
     }
     
     var body: some View {
         VStack(spacing: 0) {
             titleView
-                
             List {
                 ForEach(viewModel.sortedTexts, id: \.self) { text in
                     RowView(text: text)
                 }
                 .onDelete(perform: viewModel.deleteText)
             }
-            
         }
         .overlay(emptyView)
         .onChange(of: scenePhase) { newPhase in
@@ -73,9 +70,7 @@ struct RowView: View {
     var body: some View {
         HStack {
             Text(text)
-            
             Spacer()
-            
             Button {
                 viewModel.setPasteboard(text: text)
             } label: {
