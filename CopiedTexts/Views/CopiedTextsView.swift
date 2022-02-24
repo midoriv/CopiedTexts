@@ -68,7 +68,7 @@ struct CopiedTextsView: View {
     var notifyView: some View {
         VStack {
             Text("Text Copied!")
-                .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .opacity))
+                .transition(.opacity)
                 .onAppear {
                     withAnimation(.default.delay(2)) {
                         notify = false
