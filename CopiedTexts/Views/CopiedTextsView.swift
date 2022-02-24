@@ -108,6 +108,7 @@ struct RowView: View {
             }
             .frame(width: 60, height: 30)
         }
+        .buttonStyle(BorderlessButtonStyle())
     }
 }
 
