@@ -67,14 +67,19 @@ struct CopiedTextsView: View {
     @ViewBuilder
     var notifyView: some View {
         VStack {
-            Text("Text Copied!")
-                .transition(.opacity)
-                .onAppear {
-                    withAnimation(.default.delay(2)) {
-                        notify = false
-                    }
-                    print("notify value: \(notify)")
+            Color.gray
+            .frame(width: 400, height: 50)
+            .overlay(
+                Text("Text Copied!")
+            )
+            .transition(.opacity)
+            .onAppear {
+                withAnimation(.default.delay(2)) {
+                    notify = false
                 }
+                print("notify value: \(notify)")
+            }
+            
             Spacer()
         }
     }
