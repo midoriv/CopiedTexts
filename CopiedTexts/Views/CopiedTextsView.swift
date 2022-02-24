@@ -89,25 +89,25 @@ struct RowView: View {
         HStack {
             Text(text)
             Spacer()
-            Button {
-                viewModel.setPasteboard(text: text)
-                withAnimation {
-                    notify = true
-                }
-            } label: {
-                copyButton
-            }
+            copyButton
         }
     }
     
     var copyButton: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 10)
-                .foregroundColor(.mint)
-            Text("Copy")
-                .foregroundColor(.white)
+        Button {
+            viewModel.setPasteboard(text: text)
+            withAnimation {
+                notify = true
+            }
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundColor(.mint)
+                Text("Copy")
+                    .foregroundColor(.white)
+            }
+            .frame(width: 60, height: 30)
         }
-        .frame(width: 60, height: 30)
     }
 }
 
