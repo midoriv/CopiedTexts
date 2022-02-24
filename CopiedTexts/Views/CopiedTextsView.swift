@@ -10,6 +10,7 @@ import SwiftUI
 struct CopiedTextsView: View {
     @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var viewModel: CopiedTextsViewModel
+    @State private var notify = false
     
     @ViewBuilder
     var emptyView: some View {
@@ -37,7 +38,7 @@ struct CopiedTextsView: View {
             titleView
             List {
                 ForEach(viewModel.sortedTexts, id: \.self) { text in
-                    RowView(text: text)
+                    RowView(notify: $notify, text: text)
                 }
                 .onDelete(perform: viewModel.deleteText)
             }
@@ -60,11 +61,26 @@ struct CopiedTextsView: View {
                 viewModel.inspectPasteboard()
             }
         }
+        .overlay(notify ? notifyView : nil)
+    }
+    
+    @ViewBuilder
+    var notifyView: some View {
+        VStack {
+            Text("Text Copied!")
+//                .animation(.default.delay(2), value: notify)
+                .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .opacity))
+                .onAppear {
+                    print("notify value: \(notify)")
+                }
+            Spacer()
+        }
     }
 }
 
 struct RowView: View {
     @EnvironmentObject var viewModel: CopiedTextsViewModel
+    @Binding var notify: Bool
     var text: String
     
     var body: some View {
@@ -73,6 +89,9 @@ struct RowView: View {
             Spacer()
             Button {
                 viewModel.setPasteboard(text: text)
+                withAnimation {
+                    notify = true
+                }
             } label: {
                 copyButton
             }
