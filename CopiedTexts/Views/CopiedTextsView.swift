@@ -11,7 +11,6 @@ struct CopiedTextsView: View {
     @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var viewModel: CopiedTextsViewModel
     @State private var isNotified = false
-    @State private var isButtonDisabled = false
     
     @ViewBuilder
     var emptyView: some View {
@@ -40,7 +39,7 @@ struct CopiedTextsView: View {
                 titleView
                 List {
                     ForEach(viewModel.sortedTexts, id: \.self) { text in
-                        RowView(isNotified: $isNotified, isButtonDisabled: $isButtonDisabled, text: text)
+                        RowView(isNotified: $isNotified, text: text)
                     }
                     .onDelete(perform: viewModel.deleteText)
                 }
@@ -64,8 +63,7 @@ struct CopiedTextsView: View {
                 }
             }
             .overlay(
-                isNotified ?
-                NotifyView(isNotified: $isNotified, isButtonDisabled: $isButtonDisabled, geometry: geometry) : nil
+                isNotified ? NotifyView(isNotified: $isNotified, geometry: geometry) : nil
             )
         }
     }
@@ -73,7 +71,6 @@ struct CopiedTextsView: View {
 
 struct NotifyView: View {
     @Binding var isNotified: Bool
-    @Binding var isButtonDisabled: Bool
     var geometry: GeometryProxy
     
     var body: some View {
@@ -85,12 +82,10 @@ struct NotifyView: View {
             .transition(.opacity)
             .onAppear {
                 withAnimation(.default.delay(2)) {
-                    isNotified = false
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    // Put your code which should be executed with a delay here
-                    isButtonDisabled = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        // Put your code which should be executed with a delay here
+                        isNotified = false
+                    }
                 }
             }
             
@@ -103,7 +98,6 @@ struct NotifyView: View {
 struct RowView: View {
     @EnvironmentObject var viewModel: CopiedTextsViewModel
     @Binding var isNotified: Bool
-    @Binding var isButtonDisabled: Bool
     var text: String
     
     var body: some View {
@@ -120,18 +114,17 @@ struct RowView: View {
             withAnimation {
                 isNotified = true
             }
-            isButtonDisabled = true
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
-                    .foregroundColor(isButtonDisabled ? .gray : .mint)
+                    .foregroundColor(isNotified ? .gray : .mint)
                 Text("Copy")
                     .foregroundColor(.white)
             }
             .frame(width: 60, height: 30)
         }
         .buttonStyle(BorderlessButtonStyle())
-        .disabled(isButtonDisabled)
+        .disabled(isNotified)
     }
 }
 
