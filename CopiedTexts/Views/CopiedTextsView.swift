@@ -61,11 +61,14 @@ struct CopiedTextsView: View {
                 viewModel.inspectPasteboard()
             }
         }
-        .overlay(notify ? notifyView : nil)
+        .overlay(notify ? NotifyView(notify: $notify) : nil)
     }
+}
+
+struct NotifyView: View {
+    @Binding var notify: Bool
     
-    @ViewBuilder
-    var notifyView: some View {
+    var body: some View {
         VStack {
             Color.gray
             .frame(width: 400, height: 50)
