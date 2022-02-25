@@ -34,47 +34,49 @@ struct CopiedTextsView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            titleView
-            List {
-                ForEach(viewModel.sortedTexts, id: \.self) { text in
-                    RowView(notify: $notify, text: text)
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                titleView
+                List {
+                    ForEach(viewModel.sortedTexts, id: \.self) { text in
+                        RowView(notify: $notify, text: text)
+                    }
+                    .onDelete(perform: viewModel.deleteText)
                 }
-                .onDelete(perform: viewModel.deleteText)
             }
+            .overlay(emptyView)
+            .onChange(of: scenePhase) { newPhase in
+                switch newPhase {
+                case .inactive:
+                    print("inactive")
+                case .active:
+                    print("active")
+                case .background:
+                    print("background")
+                @unknown default:
+                    break
+                }
+                
+                if newPhase == .active {
+    //                viewModel.clearPasteboard()
+                    viewModel.inspectPasteboard()
+                }
+            }
+            .overlay(notify ? NotifyView(notify: $notify, geometry: geometry) : nil)
         }
-        .overlay(emptyView)
-        .onChange(of: scenePhase) { newPhase in
-            switch newPhase {
-            case .inactive:
-                print("inactive")
-            case .active:
-                print("active")
-            case .background:
-                print("background")
-            @unknown default:
-                break
-            }
-            
-            if newPhase == .active {
-//                viewModel.clearPasteboard()
-                viewModel.inspectPasteboard()
-            }
-        }
-        .overlay(notify ? NotifyView(notify: $notify) : nil)
     }
 }
 
 struct NotifyView: View {
     @Binding var notify: Bool
+    var geometry: GeometryProxy
     
     var body: some View {
         VStack {
-            Color.gray
-            .frame(width: 400, height: 50)
-            .overlay(
-                Text("Text Copied!")
-            )
+            Color.mint
+            .frame(width: geometry.size.width, height: 50)
+            .opacity(0.9)
+            .overlay(Text("Text Copied!").bold())
             .transition(.opacity)
             .onAppear {
                 withAnimation(.default.delay(2)) {
