@@ -11,10 +11,6 @@ import SwiftUI
 class CopiedTextsViewModel: ObservableObject {
     @Published var texts = [String]()
     
-    var sortedTexts: [String] {
-        texts.reversed()
-    }
-    
     
     // MARK: - Intents
     
@@ -22,7 +18,7 @@ class CopiedTextsViewModel: ObservableObject {
         if let text = UIPasteboard.general.string {
             if !self.texts.contains(text) {
                 DispatchQueue.main.async {
-                    self.texts.append(text)
+                    self.texts.insert(text, at: 0)
                 }
             }
         }
@@ -38,6 +34,7 @@ class CopiedTextsViewModel: ObservableObject {
     
     func deleteText(indexSet: IndexSet) {
         texts.remove(atOffsets: indexSet)
+        
         // if deleted the last text
         if texts.isEmpty {
             clearPasteboard()

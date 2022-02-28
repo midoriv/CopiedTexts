@@ -11,6 +11,7 @@ struct CopiedTextsView: View {
     @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var viewModel: CopiedTextsViewModel
     @State private var isNotified = false
+    @State private var selectedText: String?
     
     @ViewBuilder
     var emptyView: some View {
@@ -38,32 +39,26 @@ struct CopiedTextsView: View {
             VStack(spacing: 0) {
                 titleView
                 List {
-                    ForEach(viewModel.sortedTexts, id: \.self) { text in
-                        RowView(isNotified: $isNotified, text: text)
+                    ForEach(viewModel.texts, id: \.self) { text in
+                        RowView(
+                            isNotified: $isNotified,
+                            selectedText: $selectedText,
+                            text: text
+                        )
+                        .listRowBackground(selectedText == text ? Color(.systemGray5) : nil)
                     }
                     .onDelete(perform: viewModel.deleteText)
                 }
             }
             .overlay(emptyView)
             .onChange(of: scenePhase) { newPhase in
-                switch newPhase {
-                case .inactive:
-                    print("inactive")
-                case .active:
-                    print("active")
-                case .background:
-                    print("background")
-                @unknown default:
-                    break
-                }
-                
                 if newPhase == .active {
     //                viewModel.clearPasteboard()
                     viewModel.inspectPasteboard()
                 }
             }
             .overlay(
-                isNotified ? NotifyView(isNotified: $isNotified, geometry: geometry) : nil
+                isNotified ? NotifyView(isNotified: $isNotified, selectedText: $selectedText, geometry: geometry) : nil
             )
         }
     }
@@ -71,6 +66,7 @@ struct CopiedTextsView: View {
 
 struct NotifyView: View {
     @Binding var isNotified: Bool
+    @Binding var selectedText: String?
     var geometry: GeometryProxy
     
     var body: some View {
@@ -83,8 +79,8 @@ struct NotifyView: View {
             .onAppear {
                 withAnimation(.default.delay(2)) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        // Put your code which should be executed with a delay here
                         isNotified = false
+                        selectedText = nil
                     }
                 }
             }
@@ -98,6 +94,7 @@ struct NotifyView: View {
 struct RowView: View {
     @EnvironmentObject var viewModel: CopiedTextsViewModel
     @Binding var isNotified: Bool
+    @Binding var selectedText: String?
     var text: String
     
     var body: some View {
@@ -112,6 +109,7 @@ struct RowView: View {
         Button {
             viewModel.setPasteboard(text: text)
             withAnimation {
+                selectedText = text
                 isNotified = true
             }
         } label: {
