@@ -37,7 +37,7 @@ class CopiedTextsViewModel: ObservableObject {
     
     func inspectPasteboard() {
         if let text = UIPasteboard.general.string {
-            if !self.texts.contains(text) {
+            if !text.isEmpty && !self.texts.contains(text) {
                 DispatchQueue.main.async {
                     self.texts.insert(text, at: 0)
                 }
@@ -55,10 +55,6 @@ class CopiedTextsViewModel: ObservableObject {
     
     func deleteText(indexSet: IndexSet) {
         texts.remove(atOffsets: indexSet)
-        
-        // if deleted the last text
-        if texts.isEmpty {
-            clearPasteboard()
-        }
+        clearPasteboard()
     }
 }
