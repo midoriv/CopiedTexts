@@ -9,7 +9,28 @@ import Foundation
 import SwiftUI
 
 class CopiedTextsViewModel: ObservableObject {
-    @Published var texts = [String]()
+    @Published var texts = [String]() {
+        didSet {
+            storeInUserDefaults()
+        }
+    }
+    
+    private var userDefaultKey = "UserDefault"
+    
+    private func storeInUserDefaults() {
+        UserDefaults.standard.set(try? JSONEncoder().encode(texts), forKey: userDefaultKey)
+    }
+    
+    private func restoreFromUserDefaults() {
+        if let jsonData = UserDefaults.standard.data(forKey: userDefaultKey),
+           let decodedTexts = try? JSONDecoder().decode(Array<String>.self, from: jsonData) {
+            texts = decodedTexts
+        }
+    }
+    
+    init() {
+        restoreFromUserDefaults()
+    }
     
     
     // MARK: - Intents
