@@ -15,7 +15,10 @@ class CopiedTextsViewModel: ObservableObject {
         }
     }
     
+    private(set) var isFirst: Bool
+    
     private var userDefaultKey = "UserDefault"
+    private var userDefaultKey2 = "UserDefault: isFirst"
     
     private func storeInUserDefaults() {
         UserDefaults.standard.set(try? JSONEncoder().encode(texts), forKey: userDefaultKey)
@@ -28,8 +31,23 @@ class CopiedTextsViewModel: ObservableObject {
         }
     }
     
+    private func setIsFirstInUserDefaults() {
+        if isFirst {
+            isFirst = false
+            UserDefaults.standard.set(try? JSONEncoder().encode(isFirst), forKey: userDefaultKey2)
+        }
+    }
+    
     init() {
-        restoreFromUserDefaults()
+        isFirst = UserDefaults.standard.data(forKey: userDefaultKey2) == nil
+        
+        // ensure that currently copied text is not shown the first time app runs
+        if isFirst {
+            clearPasteboard()
+        }
+        else {
+            restoreFromUserDefaults()
+        }
     }
     
     
@@ -41,6 +59,8 @@ class CopiedTextsViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.texts.insert(text, at: 0)
                 }
+                
+                setIsFirstInUserDefaults()
             }
         }
     }
@@ -54,7 +74,7 @@ class CopiedTextsViewModel: ObservableObject {
     }
     
     func deleteText(indexSet: IndexSet) {
-        texts.remove(atOffsets: indexSet)
         clearPasteboard()
+        texts.remove(atOffsets: indexSet)
     }
 }

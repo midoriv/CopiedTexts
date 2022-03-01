@@ -16,7 +16,12 @@ struct CopiedTextsView: View {
     @ViewBuilder
     var emptyView: some View {
         if viewModel.texts.isEmpty {
-            Text("No copied text yet").font(.title3)
+            if viewModel.isFirst {
+                Text("You will see the contents of your clipboard here ...").font(.title3)
+            }
+            else {
+                Text("No clipboard contents.").font(.title3)
+            }
         }
     }
     
