@@ -16,12 +16,14 @@ struct CopiedTextsView: View {
     @ViewBuilder
     var emptyView: some View {
         if viewModel.texts.isEmpty {
-            if viewModel.isFirst {
-                Text("You will see the contents of your clipboard here ...").font(.title3)
-            }
-            else {
-                Text("No clipboard contents.").font(.title3)
-            }
+            Group {
+                if viewModel.isFirst {
+                    Text("You will see the contents of your clipboard here ...")
+                }
+                else {
+                    Text("No clipboard contents.")
+                }
+            }.font(.title3)
         }
     }
     
@@ -58,7 +60,6 @@ struct CopiedTextsView: View {
             .overlay(emptyView)
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {
-    //                viewModel.clearPasteboard()
                     viewModel.inspectPasteboard()
                 }
             }
