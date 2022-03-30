@@ -30,4 +30,9 @@ The copied texts would pile up as you use this app. You can delete unnecessary t
 <img src="assets/gifs/delete-texts.gif" alt="Demo - Delete all texts in the list" width="300" height="510" />
 
 
-## Technologies
+## Installation
+Clone this repository, simply open it on Xcode and run using iOS Simulator or your device.
+
+
+## Technology
+The user interface is built based on SwiftUI as it is a new platform designed to provide a better and easier development experience.
