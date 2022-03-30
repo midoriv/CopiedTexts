@@ -55,11 +55,14 @@ class CopiedTextsViewModel: ObservableObject {
     
     // MARK: - Intents
     
+    // If the pasteboard contains a string add it to the `texts` collection
     func inspectPasteboard() {
         if let text = UIPasteboard.general.string {
             if !text.isEmpty && !self.texts.contains(text) {
+                let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                
                 DispatchQueue.main.async {
-                    self.texts.insert(text, at: 0)
+                    self.texts.insert(trimmed, at: 0)
                 }
                 
                 // isFirst is set to false the first time a text is added
